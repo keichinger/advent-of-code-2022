@@ -1,7 +1,8 @@
 mod calories_data;
 mod elf_calories_calculator;
+mod elf_calories_stats;
 
-use crate::day01::elf_calories_calculator::calculate_elf_calories;
+use crate::day01::elf_calories_calculator::calculate_elf_calories_stats;
 use num_format::{Locale, ToFormattedString};
 
 pub fn run_problem() {
@@ -9,20 +10,19 @@ pub fn run_problem() {
     println!("======================");
     println!();
 
-    let calories_entries = calculate_elf_calories();
-
-    println!(
-        "  - Found calories data for {} elves.",
-        calories_entries.len()
-    );
-
-    let highest_carrying_elf = calories_entries.first().unwrap();
+    let stats = calculate_elf_calories_stats();
 
     println!(
         "  - The elf carrying the highest number of calories is number {} with {} calories!",
-        highest_carrying_elf.elf_index,
-        highest_carrying_elf
-            .total_calories()
+        stats.highest_individual_calories_elf_index,
+        stats
+            .highest_individual_calories
+            .to_formatted_string(&Locale::de)
+    );
+    println!(
+        "  - The Top 3 total calories snack count is {} calories!",
+        stats
+            .top_three_total_calories
             .to_formatted_string(&Locale::de)
     );
 }

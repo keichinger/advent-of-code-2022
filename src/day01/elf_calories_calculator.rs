@@ -1,11 +1,12 @@
 use crate::day01::calories_data::CaloriesData;
+use crate::day01::elf_calories_stats::ElfCaloriesStats;
 use io::{BufReader, Lines};
 use std::fs::File;
 use std::io;
 use std::io::BufRead;
 use std::path::Path;
 
-pub fn calculate_elf_calories() -> Vec<CaloriesData> {
+pub fn calculate_elf_calories_stats() -> ElfCaloriesStats {
     let mut calories_entries = vec![];
 
     for (index, grouped_calories) in get_grouped_calories().iter().enumerate() {
@@ -17,7 +18,24 @@ pub fn calculate_elf_calories() -> Vec<CaloriesData> {
 
     calories_entries.sort_by(|a, b| b.total_calories().cmp(&a.total_calories()));
 
-    calories_entries
+    let highest_individual = calories_entries.first().unwrap();
+    let highest_individual_calories_elf_index = highest_individual.elf_index;
+    let highest_individual_calories = highest_individual.total_calories();
+
+    let top_three_total_calories =
+        calories_entries
+            .into_iter()
+            .take(3)
+            .fold(0, |mut sum, value| {
+                sum += value.total_calories();
+                sum
+            });
+
+    ElfCaloriesStats {
+        highest_individual_calories_elf_index,
+        highest_individual_calories,
+        top_three_total_calories,
+    }
 }
 
 fn read_lines<P>(filename: P) -> io::Result<Lines<BufReader<File>>>
